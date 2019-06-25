@@ -1,0 +1,75 @@
+---
+title: "Isotopologue plots"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,dpi=72,dev="CairoPNG")
+```
+
+
+```{r bp, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+options(stringsAsFactors = F)
+library(reshape2);library(grid);library(ggplot2);library(gridExtra);library(Cairo)
+dat<-read.csv("/project/CRI/DeBerardinis_lab/lcai/LCCL/Data/Processed/Minna_lab/metabolic/13C/13C.csv",check.names = F,row.names = 1)
+dat<-data.frame(cell=rownames(dat),melt(dat),check.names = F)
+dat$variable<-as.character(dat$variable)
+dat$metabolite<-substr(dat$variable,1,3)
+dat$metabolite<-factor(c('Citrate','Fumarate','Malate','Lactate','Serine','Glycine')[match(dat$metabolite,unique(dat$metabolite))],
+                       levels=c('Citrate','Fumarate','Malate','Lactate','Serine','Glycine'),ordered = T)
+dat$tracer<-substr(dat$variable,4,4)
+dat$tracer<-c('[U-13C]glucose','[U-13C]glutamine')[match(dat$tracer,c('G','Q'))]
+# levels(dat$tracer)<-c(expression("[U-"^"13"*"C]glucose"),expression("[U-"^"13"*"C]glutamine"))
+dat$timepoint<-factor(c('6h','24h')[as.numeric(grepl('24',dat$variable))+1],levels=c('6h','24h'))
+dat$labeled_carbons<-sapply(dat$variable,FUN=function(x) paste0('m',rev(unlist(strsplit(x,split = '')))[1]))
+dat$jitter<-jitter(as.numeric(substr(dat$labeled_carbons,2,2))+1,1)
+```
+
+##  {.tabset .tabset-dropdown}
+
+```{r cell_plots,fig.width=16,fig.height=14,echo=FALSE,message=FALSE,warning=FALSE,results="asis"}
+for(cell in sort(unique(dat$cell))){
+  cat("  \n### ", cell,"  \n")
+  g2<-ggplot(dat)+geom_violin(aes(x=labeled_carbons,y=value,colour=tracer,fill=metabolite,alpha=timepoint),lwd=0.2)+
+    # geom_point(aes(x=jitter,y=value,fill=metabolite),alpha=0.1,size=0.6,pch=21,colour="white")+
+    geom_point(data = dat[dat$cell==cell,],aes(x=labeled_carbons,y=value,fill=metabolite),pch=21,colour="gray")+
+    scale_alpha_discrete(range=c(0.4,0.8))+
+    guides(alpha=guide_legend(override.aes=list(fill=hcl(c(15,195),100,0,alpha=c(0.3,0.6)),colour=NA))) +
+    xlab('Isotopologues')+ylab('% Enrichment')+facet_grid(metabolite+timepoint~tracer)+
+    theme_classic()+ggtitle(cell)+
+    scale_fill_manual(values = c('Citrate'='#e41a1c','Fumarate'='#377eb8','Malate'='#4daf4a','Lactate'='#984ea3','Serine'='#ff7f00','Glycine'='#ffff33'))+
+    scale_color_manual(values = c('[U-13C]glucose'="#fbbc09ff",'[U-13C]glutamine'="#ec008cff"))+
+    ylim(c(0,105))
+  tryCatch({
+    g1<-ggplot(dat[dat$cell==cell,],
+               aes(x=labeled_carbons,y=value,colour=tracer,fill=metabolite))+geom_bar(stat = "identity",aes(alpha=timepoint))+
+      scale_alpha_discrete(range=c('6h'=0.4,'24h'=0.8))+
+      guides(alpha=guide_legend(override.aes=list(fill=hcl(c(15,195),100,0,alpha=c(0.3,0.6)),colour=NA))) +
+      xlab('Isotopologues')+ylab('% Enrichment')+facet_grid(metabolite+timepoint~tracer,drop = T)+
+      theme_classic()+ggtitle(cell)+
+      scale_fill_manual(values = c('Citrate'='#e41a1c','Fumarate'='#377eb8','Malate'='#4daf4a','Lactate'='#984ea3','Serine'='#ff7f00','Glycine'='#ffff33'))+
+      scale_color_manual(values = c('[U-13C]glucose'="#fbbc09ff",'[U-13C]glutamine'="#ec008cff"))+
+      ylim(c(0,105))+
+      geom_text(aes(x=labeled_carbons,y=value, label = sprintf("%.0f%%", value)),colour="black", vjust=-0.3)
+    grid.arrange(g1, g2, ncol = 2,newpage = T)
+  },error=function(e){
+    tmp<-dat[dat$cell==cell,]
+    tmp<-tmp[complete.cases(tmp),]
+    g1<-ggplot(dat[dat$cell==cell,],
+               aes(x=labeled_carbons,y=value,colour=tracer,fill=metabolite))+geom_bar(stat = "identity",aes(alpha=timepoint))+
+      scale_alpha_discrete(range=switch(sum(unique(as.numeric(tmp$timepoint))),c(0.4,0.4),c(1,1),c(0.4,1)))+
+      xlab('Isotopologues')+ylab('% Enrichment')+facet_grid(metabolite+timepoint~tracer,drop = T)+
+      theme_classic()+ggtitle(cell)+
+      scale_fill_manual(values = c('Citrate'='#e41a1c','Fumarate'='#377eb8','Malate'='#4daf4a','Lactate'='#984ea3','Serine'='#ff7f00','Glycine'='#ffff33'))+
+      scale_color_manual(values = c('[U-13C]glucose'="#fbbc09ff",'[U-13C]glutamine'="#ec008cff"))+
+      ylim(c(0,105))+
+      geom_text(aes(x=labeled_carbons,y=value, label = sprintf("%.0f%%", value)),colour="black", vjust=-0.3)
+    grid.arrange(g1, g2, ncol = 2,newpage = T)
+  })
+
+  cat("  \n")
+
+}
+
+```

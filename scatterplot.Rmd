@@ -1,0 +1,33 @@
+---
+title: "Scatter Plot"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r sp, echo=FALSE,warning=FALSE,message=FALSE}
+library(plotly)
+setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
+df<-readRDS('final/data/metabolic_profiling_data.rds')
+df[]<-apply(df,2,FUN=function(x) round(x,2))
+df.tmp<-data.frame(x=df$CitG6m0,y=df$CitG6m0)
+p <- plotly::plot_ly(df.tmp, x = ~x, y = ~y, type = "scatter",mode = "markers",text = rownames(df),
+                     marker=list(color="#DD4714", opacity=0.5))  %>%
+  layout(xaxis = list(side ="top" ) )
+p <-  plotly::layout(
+  p,
+  updatemenus = list(
+    list(text="x",
+         x=0.6,y = 1.15,
+         buttons = lapply(colnames(df),FUN=function(x) list(method='restyle',args=list("x",list(df[,x])),label=x))
+    ),
+    list(text="y",
+         x=-0.05,y = 0.55,
+         buttons = lapply(colnames(df),FUN=function(x) list(method='restyle',args=list("y",list(df[,x])),label=x))
+    )
+  )
+)
+p
+```

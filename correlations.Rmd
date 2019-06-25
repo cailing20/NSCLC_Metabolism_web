@@ -1,0 +1,146 @@
+---
+title: "Correlations"
+output: 
+  html_document:
+    css: https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<p>Note: correlation is statistically significant when the absolute value is above or equal to 0.22. </p>
+
+```{r correlation, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+library(DT)
+setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
+df<-readRDS('final/data/metabolic_profiling_data.rds')
+library(Hmisc)
+library(RColorBrewer)
+df.cor<-rcorr(as.matrix(df))
+brks <- seq(from = -1,to = 1,length.out = 101)
+clrs <- colorRampPalette(rev(brewer.pal(7,'RdBu')))(102)
+section.dt<-function(select){
+  datatable(round(df.cor$r[,select],2), extensions = c('FixedColumns',"FixedHeader"), 
+          options = list(scrollX = TRUE, 
+                         paging=FALSE,
+                         fixedHeader=TRUE,
+                         fixedColumns = list(leftColumns = 1, rightColumns = 0))) %>%
+  formatStyle(colnames(df.cor$r[,select]), backgroundColor = styleInterval(brks, clrs))
+}
+```
+
+#### <a href="correlations.xlsx" download="correlations.xlsx">Download Full Table</a>
+
+##  {.tabset .tabset-fade .tabset-pills}
+
+### Cit6G
+```{r cor_Cit6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(1:7)
+```
+
+### Cit24G
+```{r cor_Cit24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(8:14)
+```
+
+### Cit6Q
+```{r cor_Cit6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(15:21)
+```
+
+### Cit24Q
+```{r cor_Cit24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(22:28)
+```
+
+### Fum6G
+```{r cor_Fum6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(29:33)
+```
+
+### Fum24G
+```{r cor_Fum24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(34:38)
+```
+
+### Fum6Q
+```{r cor_Fum6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(39:43)
+```
+
+### Fum24Q
+```{r cor_Fum24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(44:48)
+```
+
+### Mal6G
+```{r cor_Mal6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(49:53)
+```
+
+### Mal24G
+```{r cor_Mal24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(54:58)
+```
+
+### Mal6Q
+```{r cor_Mal6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(59:63)
+```
+
+### Mal24Q
+```{r cor_Mal24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(64:68)
+```
+
+### Lac6G
+```{r cor_Lac6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(69:72)
+```
+
+### Lac24G
+```{r cor_Lac24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(73:76)
+```
+
+### Lac6Q
+```{r cor_Lac6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(77:80)
+```
+
+### Lac24Q
+```{r cor_Lac24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(81:84)
+```
+
+### Ser6G
+```{r cor_Ser6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(85:88)
+```
+
+### Ser24G
+```{r cor_Ser24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(89:92)
+```
+
+### Gly6G
+```{r cor_Gly6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(93:95)
+```
+
+### Gly24G
+```{r cor_Gly24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(96:98)
+```
+
+### nutrient utilization
+```{r cor_nutrient utilization, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(99:104)
+```
+
+### growth and nutrient dependence
+```{r cor_growth and nutrient dependence, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+section.dt(105:112)
+```
+

@@ -1,0 +1,13 @@
+---
+title: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,dev = "svg")
+```
+
+</br>
+
+### Metabolic Diversity in Human Non-Small Cell Lung Cancer Cells
+<p> This web app provides tools for exploring metabolic profiling data from NSCLC cell line. For details see preprint at [bioRxiv](https://www.biorxiv.org/content/10.1101/561688v1) </p>

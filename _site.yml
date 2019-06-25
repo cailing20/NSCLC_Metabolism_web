@@ -1,0 +1,24 @@
+name: "NSCLC metabolism" 
+output_dir: "."
+navbar:
+  title: "NSCLC metabolic profiling data"
+  left:
+    - text: "Study Overview"
+      href: index.html
+    - text: "Data"
+      href: all_data.html
+    - text: "Correlations"
+      href: correlations.html
+    - text: "Scatter plots"
+      href: scatterplot.html
+    - text: "View cell line"
+      menu:
+        - text: "Isotopologues"
+          href: "isotopologue_plots.html"
+        - text: "Nutrient Utilization"
+          href: "nutrient_utilization.html"
+        - text: "Growth and Nutrient Dependence"
+          href: "growth_and_nutrient_dependence.html"
+output:
+  html_document:
+    theme: united

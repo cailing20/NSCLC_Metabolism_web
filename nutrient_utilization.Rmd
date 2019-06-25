@@ -1,0 +1,47 @@
+---
+title: "Nutrient Utilization"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,dpi=72,dev="CairoPNG")
+```
+
+
+```{r nutrients, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+options(stringsAsFactors = F)
+library(reshape2);library(ggplot2);library(gridExtra);library(Cairo)
+setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
+dat<-readRDS('final/data/metabolic_profiling_data.rds')
+dat.us<-dat[,c(99:100,102:103)]
+dat.r<-dat[,c(101,104)]
+dat.us<-data.frame(cell=rownames(dat.us),melt(dat.us),check.names = F)
+dat.r<-data.frame(cell=rownames(dat.r),melt(dat.r),check.names = F)
+dat.us<-dat.us[complete.cases(dat.us),]
+dat.r<-dat.r[complete.cases(dat.r),]
+```
+
+##  {.tabset .tabset-dropdown}
+
+```{r cell_plots,fig.width=12,fig.height=4,echo=FALSE,message=FALSE,warning=FALSE,results="asis"}
+for(cell in sort(unique(dat.us$cell))){
+  cat("  \n### ", cell,"  \n")
+g1<-ggplot(dat.us,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
+  xlab('nutrient uptake or secretion')+ylab('nmoles/ug protein/hr')+
+  theme_classic()+ggtitle(cell)+
+  scale_fill_manual(values = c('Glc'='#3182bd','Lac'='#9ecae1','Gln'='#31a354','Glu'='#a1d99b'))+
+  guides(fill=guide_legend(title=""))+
+  geom_point(data = dat.us[dat.us$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
+g2<-ggplot(dat.r,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
+  xlab('nutrient utilization rate')+ylab('rate')+
+  theme_classic()+ggtitle(cell)+
+  scale_fill_manual(values = c('Lac/Glc'='#3182bd','Glu/Gln'='#31a354'))+
+  guides(fill=guide_legend(title=""))+
+  geom_point(data = dat.r[dat.r$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
+  grid.arrange(g1, g2, ncol = 2,newpage = T)
+  cat("  \n")
+
+}
+
+```

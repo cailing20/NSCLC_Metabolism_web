@@ -1,0 +1,150 @@
+---
+title: "Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r all_data, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+library(DT)
+setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
+df<-readRDS('final/data/metabolic_profiling_data.rds')
+df<-df[order(rownames(df)),]
+library(Hmisc)
+library(RColorBrewer)
+brks <- seq(from = 0,to = 100,length.out = 101)
+clrs <- colorRampPalette(c('white','#dd1c77'))(102)
+isotopologue.dt<-function(select){
+  datatable(round(df[complete.cases(df[,select]),select],2), extensions = c('FixedColumns',"FixedHeader"), 
+          options = list(scrollX = TRUE, 
+                         paging=FALSE,
+                         fixedHeader=TRUE,
+                         fixedColumns = list(leftColumns = 1, rightColumns = 0))) %>%
+  formatStyle(colnames(df[complete.cases(df[,select]),select]), backgroundColor = styleInterval(brks, clrs))
+}
+
+other.dt<-function(select){
+  datatable(round(df[complete.cases(df[,select]),select],2), extensions = c('FixedColumns',"FixedHeader"), 
+          options = list(scrollX = TRUE, 
+                         paging=FALSE,
+                         fixedHeader=TRUE,
+                         fixedColumns = list(leftColumns = 1, rightColumns = 0)))
+}
+```
+
+#### <a href="NSCLC_metabolic_profiling.xlsx" download="NSCLC_metabolic_profiling.xlsx">Download Full Table</a>
+
+##  {.tabset .tabset-fade .tabset-pills}
+
+### Cit6G
+```{r dat_Cit6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(1:7)
+```
+
+### Cit24G
+```{r dat_Cit24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(8:14)
+```
+
+### Cit6Q
+```{r dat_Cit6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(15:21)
+```
+
+### Cit24Q
+```{r dat_Cit24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(22:28)
+```
+
+### Fum6G
+```{r dat_Fum6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(29:33)
+```
+
+### Fum24G
+```{r dat_Fum24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(34:38)
+```
+
+### Fum6Q
+```{r dat_Fum6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(39:43)
+```
+
+### Fum24Q
+```{r dat_Fum24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(44:48)
+```
+
+### Mal6G
+```{r dat_Mal6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(49:53)
+```
+
+### Mal24G
+```{r dat_Mal24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(54:58)
+```
+
+### Mal6Q
+```{r dat_Mal6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(59:63)
+```
+
+### Mal24Q
+```{r dat_Mal24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(64:68)
+```
+
+### Lac6G
+```{r dat_Lac6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(69:72)
+```
+
+### Lac24G
+```{r dat_Lac24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(73:76)
+```
+
+### Lac6Q
+```{r dat_Lac6Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(77:80)
+```
+
+### Lac24Q
+```{r dat_Lac24Q, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(81:84)
+```
+
+### Ser6G
+```{r dat_Ser6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(85:88)
+```
+
+### Ser24G
+```{r dat_Ser24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(89:92)
+```
+
+### Gly6G
+```{r dat_Gly6G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(93:95)
+```
+
+### Gly24G
+```{r dat_Gly24G, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+isotopologue.dt(96:98)
+```
+
+### nutrient utilization
+```{r dat_nutrient utilization, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+other.dt(99:104)
+```
+
+### growth and nutrient dependence
+```{r dat_growth and nutrient dependence, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+other.dt(105:112)
+```
+

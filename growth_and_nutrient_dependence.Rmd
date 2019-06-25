@@ -1,0 +1,51 @@
+---
+title: "Growth and Nutrient Dependence"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,dpi=72,dev="CairoPNG")
+```
+
+
+```{r nutrients, echo=FALSE,warning=FALSE,message=FALSE,fig.width=12}
+options(stringsAsFactors = F)
+library(reshape2);library(ggplot2);library(gridExtra);library(Cairo);library(RColorBrewer)
+setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
+dat<-readRDS('final/data/metabolic_profiling_data.rds')
+growth<-brewer.pal(name = 'Reds',n=7)[c(3,6)]
+Glc.death<-brewer.pal(name = 'Blues',n=6)[4:6]
+Gln.death<-brewer.pal(name = 'Purples',n=6)[4:6]
+dat.growth<-dat[,105:106]
+dat.death<-dat[,107:112]
+dat.growth<-data.frame(cell=rownames(dat.growth),melt(dat.growth),check.names = F)
+dat.death<-data.frame(cell=rownames(dat.death),melt(dat.death),check.names = F)
+dat.growth<-dat.growth[complete.cases(dat.growth),]
+dat.death<-dat.death[complete.cases(dat.death),]
+```
+
+##  {.tabset .tabset-dropdown}
+
+```{r cell_plots,fig.width=12,fig.height=4,echo=FALSE,message=FALSE,warning=FALSE,results="asis"}
+for(cell in sort(unique(dat.growth$cell))){
+  cat("  \n### ", cell,"  \n")
+g1<-ggplot(dat.growth,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
+  xlab('growth')+ylab('ratio')+
+  theme_classic()+ggtitle(cell)+
+  scale_fill_manual(values = c("Day3/Day1"=growth[1],"Day5/Day1"=growth[2]))+
+  guides(fill=guide_legend(title=""))+
+  geom_point(data = dat.growth[dat.growth$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
+g2<-ggplot(dat.death,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
+  xlab('fraction remain upon nutrient deprivation')+ylab('rate')+
+  theme_classic()+ggtitle(cell)+
+  scale_fill_manual(values = c("Day1-G"=Glc.death[1],"Day3-G"=Glc.death[2],"Day5-G"=Glc.death[3],
+                               "Day1-Q"=Gln.death[1],"Day3-Q"=Gln.death[2],"Day5-Q"=Gln.death[3]))+
+  guides(fill=guide_legend(title=""))+
+  geom_point(data = dat.death[dat.death$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
+grid.arrange(g1, g2, ncol = 2,newpage = T)
+  cat("  \n")
+
+}
+
+```
