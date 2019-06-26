@@ -1,9 +1,9 @@
-name: "NSCLC metabolism" 
+name: "NSCLC Cell Metabolism" 
 output_dir: "."
 navbar:
-  title: "NSCLC metabolic profiling data"
+  title: "NSCLC cell metabolic profiling data"
   left:
-    - text: "Study Overview"
+    - text: "Study overview"
       href: index.html
     - text: "Data"
       href: all_data.html

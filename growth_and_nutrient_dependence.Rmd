@@ -37,7 +37,7 @@ g1<-ggplot(dat.growth,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0
   guides(fill=guide_legend(title=""))+
   geom_point(data = dat.growth[dat.growth$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
 g2<-ggplot(dat.death,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
-  xlab('fraction remain upon nutrient deprivation')+ylab('rate')+
+  xlab('days of nutrient deprivation')+ylab('% remain')+
   theme_classic()+ggtitle(cell)+
   scale_fill_manual(values = c("Day1-G"=Glc.death[1],"Day3-G"=Glc.death[2],"Day5-G"=Glc.death[3],
                                "Day1-Q"=Gln.death[1],"Day3-Q"=Gln.death[2],"Day5-Q"=Gln.death[3]))+

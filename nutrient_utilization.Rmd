@@ -34,7 +34,7 @@ g1<-ggplot(dat.us,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,l
   guides(fill=guide_legend(title=""))+
   geom_point(data = dat.us[dat.us$cell==cell,],aes(x=variable,y=value,fill=variable),pch=21,colour="gray")
 g2<-ggplot(dat.r,aes(x=variable,y=value,fill=variable))+geom_violin(alpha=0.1,lwd=0.2)+geom_boxplot(width=0.05,outlier.shape = NA,lwd=0.3,alpha=0.1)+
-  xlab('nutrient utilization rate')+ylab('rate')+
+  xlab('nutrient utilization rate')+ylab('ratio')+
   theme_classic()+ggtitle(cell)+
   scale_fill_manual(values = c('Lac/Glc'='#3182bd','Glu/Gln'='#31a354'))+
   guides(fill=guide_legend(title=""))+
