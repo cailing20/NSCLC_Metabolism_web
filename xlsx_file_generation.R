@@ -1,4 +1,5 @@
-tmp<-readRDS('../../../final/data/metabolic_profiling_data.rds')
+tmp<-readRDS('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/final/data/metabolic_profiling_data.rds')
+tmp<-tmp[which(rownames(tmp)!='H446'),]
 library(Hmisc)
 tmp.cor<-rcorr(as.matrix(tmp))
 library(reshape2)

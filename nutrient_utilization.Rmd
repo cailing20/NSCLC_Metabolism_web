@@ -14,6 +14,7 @@ options(stringsAsFactors = F)
 library(reshape2);library(ggplot2);library(gridExtra);library(Cairo)
 setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
 dat<-readRDS('final/data/metabolic_profiling_data.rds')
+dat<-dat[which(rownames(dat)!='H446'),]
 dat.us<-dat[,c(99:100,102:103)]
 dat.r<-dat[,c(101,104)]
 dat.us<-data.frame(cell=rownames(dat.us),melt(dat.us),check.names = F)

@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(DT)
 setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
 df<-readRDS('final/data/metabolic_profiling_data.rds')
+df<-df[which(rownames(df)!='H446'),]
 library(Hmisc)
 library(RColorBrewer)
 df.cor<-rcorr(as.matrix(df))

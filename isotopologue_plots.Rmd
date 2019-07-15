@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE,dpi=72,dev="CairoPNG")
 options(stringsAsFactors = F)
 library(reshape2);library(grid);library(ggplot2);library(gridExtra);library(Cairo)
 dat<-read.csv("/project/CRI/DeBerardinis_lab/lcai/LCCL/Data/Processed/Minna_lab/metabolic/13C/13C.csv",check.names = F,row.names = 1)
+dat<-dat[which(rownames(dat)!='H446'),]
 dat<-data.frame(cell=rownames(dat),melt(dat),check.names = F)
 dat$variable<-as.character(dat$variable)
 dat$metabolite<-substr(dat$variable,1,3)

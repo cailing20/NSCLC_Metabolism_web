@@ -14,6 +14,7 @@ options(stringsAsFactors = F)
 library(reshape2);library(ggplot2);library(gridExtra);library(Cairo);library(RColorBrewer)
 setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
 dat<-readRDS('final/data/metabolic_profiling_data.rds')
+dat<-dat[which(rownames(dat)!='H446'),]
 growth<-brewer.pal(name = 'Reds',n=7)[c(3,6)]
 Glc.death<-brewer.pal(name = 'Blues',n=6)[4:6]
 Gln.death<-brewer.pal(name = 'Purples',n=6)[4:6]
