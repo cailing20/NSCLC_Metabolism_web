@@ -13,7 +13,7 @@ setwd('/project/CRI/DeBerardinis_lab/lcai/NSCLC_Metabolism/scripts/')
 df<-readRDS('final/data/metabolic_profiling_data.rds')
 df<-df[which(rownames(df)!='H446'),]
 df[]<-apply(df,2,FUN=function(x) round(x,2))
-df.tmp<-data.frame(x=df$CitG6m0,y=df$CitG6m0)
+df.tmp<-data.frame(x=rep(0,nrow(df)),y=rep(0,nrow(df)))
 p <- plotly::plot_ly(df.tmp, x = ~x, y = ~y, type = "scatter",mode = "markers",text = rownames(df),
                      marker=list(color="#DD4714", opacity=0.5))  %>%
   layout(xaxis = list(side ="top" ) )
@@ -21,10 +21,12 @@ p <-  plotly::layout(
   p,
   updatemenus = list(
     list(text="x",
+         active=-1,
          x=0.6,y = 1.15,
          buttons = lapply(colnames(df),FUN=function(x) list(method='restyle',args=list("x",list(df[,x])),label=x))
     ),
     list(text="y",
+         active=-1,
          x=-0.05,y = 0.55,
          buttons = lapply(colnames(df),FUN=function(x) list(method='restyle',args=list("y",list(df[,x])),label=x))
     )
